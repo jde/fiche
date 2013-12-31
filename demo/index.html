@@ -1,0 +1,92 @@
+<doctype html />
+<html>
+<head>
+
+	<title>Fiche is back!</title>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="../fiche.js"></script>
+
+	<style>
+
+		body {
+			font-family: helvetica;
+			padding: 24px;
+		}
+
+		.viewport {
+			width: 100%;
+			height: 400px;
+			margin: 12px auto;
+			border: 1px solid #ccc;
+		}
+	</style>
+
+</head>
+<body>
+
+	<h1>Fiche</h1>
+	<em>micro no more</em>
+	<div class="viewport"></div>
+	<div class="nav">Goto</div>
+	<div><a href="#" onclick="addKitty(f);">Add a kitty!</a></div>
+	<div><a href="#" onclick="jumpers(f);">Jumpers!</a></div>
+
+
+	<img width="100" src="http://www.inf.aber.ac.uk/advisory/faqs/library/images/microfiche1.jpg" />
+	<img width="100" src="http://www.inf.aber.ac.uk/advisory/faqs/library/images/microfiche2.jpg" />
+	<img width="100" src="http://www.inf.aber.ac.uk/advisory/faqs/library/images/microfiche3.jpg" />
+	<img width="100" src="http://www.inf.aber.ac.uk/advisory/faqs/library/images/microfiche4.jpg" />
+	<img width="100" src="http://www.inf.aber.ac.uk/advisory/faqs/library/images/microfiche5.jpg" />
+
+	<script>
+
+		var drawNav = function (f) {
+			$(".nav").html("Superfiche goto ");
+			var items = f.get();
+			for (i in items) {
+				$(".nav").append(' - <a href="#" onclick="f.goto(' + i + ');">' + i + '</a>');
+			}
+		};
+
+		var addKitty = function (f) {
+
+			f.add("<p>Hello, Kitty!</p>", function (e, fiche) {
+					return Math.floor(Math.random() * 400);
+				}, 
+				function (e, fiche) {
+					return Math.floor(Math.random() * 800);
+				}
+			);
+			drawNav(f);
+
+		};
+
+		var jumpers = function (f) {
+			var items = f.get();
+			for (i in items) {
+				f.update(i);
+			}
+			f.goto(Math.floor(Math.random() * f.get().length));
+		};
+
+		$(function () {
+			f = new fiche('.viewport');
+
+			f.add('img', function (e, fiche) {
+					return Math.floor(Math.random() * 400);
+				}, 
+				function (e, fiche) {
+					return Math.floor(Math.random() * 800);
+				}
+			);
+
+			drawNav(f);
+
+		});
+
+
+	</script>
+
+</body>
+</html>
