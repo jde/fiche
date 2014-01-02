@@ -83,12 +83,19 @@ fiche.prototype.goto = function (id) {
 
 };
 
-fiche.prototype.update = function (id) {
+fiche.prototype.update = function (id, top, left) {
 
-	this.items[id].top = this.set(this.items[id].$e, this.items[id].o.top);
-	this.items[id].left = this.set(this.items[id].$e, this.items[id].o.left);
+	if (typeof top === "undefined" && typeof left === "undefined") {
+		top = this.items[id].o.top;
+		left = this.items[id].o.left;
+	}
+
+	this.items[id].top = this.set(this.items[id].$e, top);
+	this.items[id].left = this.set(this.items[id].$e, left);
 
 	this.move(id);
+
+	return this;
 
 };
 
@@ -99,9 +106,15 @@ fiche.prototype.move = function (id) {
 	});
 };
 
-fiche.prototype.add = function (e, top, left) {
+fiche.prototype.add = function (view, top, left) {
 
-	var element = $(e);
+	var element, item;
+
+	if (view.$el) {
+		element = view.$el;
+	} else {
+		element = $(view);
+	}
 
 	if (element.length > 1) {
 		return this.addMany(e, top, left);
@@ -111,10 +124,11 @@ fiche.prototype.add = function (e, top, left) {
 		return null;
 	}
 
-	var item = {
+	item = {
 		$e: element,
-		top: this.set(e, top),
-		left: this.set(e, left),
+		top: this.set(element, top),
+		left: this.set(element, left),
+		view: view,
 		o: {
 			top: top,
 			left: left
@@ -152,6 +166,32 @@ fiche.prototype.addMany = function (es, top, left) {
 
 fiche.prototype.get = function () {
 	return this.items;
+};
+
+fiche.prototype.getBy = function (attr, value) {
+
+	for (var i = 0, l = this.items.length; i < l; i++) {
+		if (typeof this.items[i].view.get === "function") {
+			if (this.items[i].view.get(attr) === value) {
+				return this.items[i];
+			}
+		}
+	}
+
+	return null;
+
+};
+
+fiche.prototype.updateBy = function (attr, value, top, left) {
+
+	var id = this.getBy(attr, value);
+
+	if (id === null) {
+		return null;
+	}
+
+	return this.update(id, top, left);
+
 };
 
 
