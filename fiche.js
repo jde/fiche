@@ -3,12 +3,14 @@
  * by me now for you
  **/
 
-var fiche = function (e) {
+var fiche = function (e, args) {
 
 	this.state = {
 		top: 0,
 		left: 0
 	};
+
+	this.args = args;
 
 	// get our 
 	this.$viewport = $(e);
@@ -69,14 +71,27 @@ fiche.prototype.set = function (e, val) {
 
 fiche.prototype.goto = function (id) {
 
-	var vw = this.$viewport.width(),
+	var top, left,
+		vw = this.$viewport.width(),
 		vh = this.$viewport.height(),
 		ew = this.items[id].$e.width(),
 		eh = this.items[id].$e.height();
 
+	if (typeof args.lockTop !== "undefined") {
+		top = args.lockTop;
+	} else {
+		top = ((this.items[id].top * -1) + (vh / 2) - (eh / 2));
+	}
+
+	if (typeof args.lockLeft !== "undefined") {
+		left = args.lockLeft;
+	} else {
+		left = ((this.items[id].left * -1) + (vw / 2) - (ew / 2));
+	}
+
 	this.$surface.animate({
-		top: ((this.items[id].top * -1) + (vh / 2) - (eh / 2)) + 'px',
-		left: ((this.items[id].left * -1) + (vw / 2) - (ew / 2)) + 'px'
+		top: top + 'px',
+		left: left + 'px'
 	});
 
 	return this;
