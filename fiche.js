@@ -171,8 +171,9 @@ fiche.prototype.get = function () {
 fiche.prototype.getBy = function (attr, value) {
 
 	for (var i = 0, l = this.items.length; i < l; i++) {
-		if (typeof this.items[i].view.get === "function") {
-			if (this.items[i].view.get(attr) === value) {
+
+		if (this.items[i].view.model && typeof this.items[i].view.model.get === "function") {
+			if (this.items[i].view.model.get(attr) == value) {
 				return this.items[i];
 			}
 		}
@@ -184,13 +185,25 @@ fiche.prototype.getBy = function (attr, value) {
 
 fiche.prototype.updateBy = function (attr, value, top, left) {
 
-	var id = this.getBy(attr, value);
+	var item = this.getBy(attr, value);
 
-	if (id === null) {
+	if (item === null) {
 		return null;
 	}
 
-	return this.update(id, top, left);
+	return this.update(item.id, top, left);
+
+};
+
+fiche.prototype.gotoBy = function (attr, value) {
+
+	var item = this.getBy(attr, value);
+
+	if (item === null) {
+		return null;
+	}
+
+	return this.goto(item.id);
 
 };
 
