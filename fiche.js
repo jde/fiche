@@ -10,7 +10,7 @@ var fiche = function (e, args) {
 		left: 0
 	};
 
-	this.args = args;
+	this.args = args || {};
 
 	// get our 
 	this.$viewport = $(e);
@@ -77,14 +77,14 @@ fiche.prototype.goto = function (id) {
 		ew = this.items[id].$e.width(),
 		eh = this.items[id].$e.height();
 
-	if (typeof args.lockTop !== "undefined") {
-		top = args.lockTop;
+	if (typeof this.args.lockTop !== "undefined") {
+		top = this.args.lockTop;
 	} else {
 		top = ((this.items[id].top * -1) + (vh / 2) - (eh / 2));
 	}
 
-	if (typeof args.lockLeft !== "undefined") {
-		left = args.lockLeft;
+	if (typeof this.args.lockLeft !== "undefined") {
+		left = this.args.lockLeft;
 	} else {
 		left = ((this.items[id].left * -1) + (vw / 2) - (ew / 2));
 	}
@@ -132,7 +132,7 @@ fiche.prototype.add = function (view, top, left) {
 	}
 
 	if (element.length > 1) {
-		return this.addMany(e, top, left);
+		return this.addMany(element, top, left);
 	}
 
 	if (element.length < 1) {
