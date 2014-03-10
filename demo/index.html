@@ -4,8 +4,9 @@
 
 	<title>Fiche is back!</title>
 
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="../lib/jquery.js"></script>
 	<script src="../fiche.js"></script>
+	<script src="../fiche-scroll.js"></script>
 
 	<style>
 
@@ -20,6 +21,13 @@
 			margin: 12px auto;
 			border: 1px solid #ccc;
 		}
+
+		.scroll {
+			width: 50%;
+			margin: 12px auto;
+			border: 1px solid #ccc;
+		}
+
 	</style>
 
 </head>
@@ -28,6 +36,7 @@
 	<h1>Fiche</h1>
 	<em>micro no more</em>
 	<div class="viewport"></div>
+	<div class="scroll"></div>
 	<div class="nav">Goto</div>
 	<div><a href="#" onclick="addKitty(f);">Add a kitty!</a></div>
 	<div><a href="#" onclick="jumpers(f);">Jumpers!</a></div>
@@ -71,7 +80,11 @@
 		};
 
 		$(function () {
-			f = new fiche('.viewport');
+			f = new fiche('.viewport', {
+				scroll: {
+					e: $('.scroll')
+				}
+			});
 
 			f.add('img', function (e, fiche) {
 					return Math.floor(Math.random() * 400);
