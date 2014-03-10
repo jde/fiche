@@ -77,12 +77,14 @@ fiche.prototype.goto = function (id) {
 		ew = this.items[id].$e.width(),
 		eh = this.items[id].$e.height();
 
+	// set new surface top
 	if (typeof this.args.lockTop !== "undefined") {
 		top = this.args.lockTop;
 	} else {
 		top = ((this.items[id].top * -1) + (vh / 2) - (eh / 2));
 	}
 
+	// set new surface left
 	if (typeof this.args.lockLeft !== "undefined") {
 		left = this.args.lockLeft;
 	} else {
@@ -195,6 +197,54 @@ fiche.prototype.getBy = function (attr, value) {
 	}
 
 	return null;
+
+};
+
+// the surface is a concept defined by it's items
+//  to find the height and width we need to scan for the top left
+//  and bottom right pixels
+fiche.prototype.getSurfaceSize = function () {
+
+	var top = null, left = null,
+		bottom = null, right = null,
+		itemTop, itemLeft,
+		itemBottom, itemRight;
+
+	// loop through each item
+	for (var i = 0, l = this.items.length; i < l; i++) {
+
+		itemTop = this.items[i].top;
+		itemLeft = this.items[i].left;
+		itemBottom = this.items[i].top + this.items[i].$e.outerHeight();
+		itemRight = this.items[i].left + this.items[i].$e.outerWidth();
+
+		if(top === null || itemTop < top) {
+			top = itemTop;
+		}
+
+		if(left === null || itemLeft < left) {
+			left = itemLeft;
+		}
+
+		if(right === null || itemRight > right) {
+			right = itemRight;
+		}
+
+		if(bottom === null || itemBottom > bottom) {
+			bottom = itemBottom;
+		}
+
+	}
+
+	return {
+		top: top,
+		right: right,
+		bottom: bottom,
+		left: left,
+		height: bottom - top,
+		width: right - left,
+		aspect: (right - left) / (bottom - top)
+	};
 
 };
 
