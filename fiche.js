@@ -42,6 +42,10 @@ var fiche = function (e, args) {
 	// prep item container
 	this.items = [];
 
+	var that = this;
+	this.triggerSurface = function () {
+		$(that).trigger('surface');
+	};
 
 };
 
@@ -94,7 +98,7 @@ fiche.prototype.goto = function (id) {
 	this.$surface.animate({
 		top: top + 'px',
 		left: left + 'px'
-	});
+	}, 200, null, this.triggerSurface);
 
 	return this;
 
@@ -165,6 +169,8 @@ fiche.prototype.add = function (view, top, left) {
 
 	this.inject(item);
 
+	this.triggerSurface();
+
 	return this;
 
 };
@@ -203,7 +209,7 @@ fiche.prototype.getBy = function (attr, value) {
 // the surface is a concept defined by it's items
 //  to find the height and width we need to scan for the top left
 //  and bottom right pixels
-fiche.prototype.getSurfaceSize = function () {
+fiche.prototype.surfaceSize = function () {
 
 	var top = null, left = null,
 		bottom = null, right = null,
@@ -244,6 +250,20 @@ fiche.prototype.getSurfaceSize = function () {
 		height: bottom - top,
 		width: right - left,
 		aspect: (right - left) / (bottom - top)
+	};
+
+};
+
+fiche.prototype.viewportSize = function () {
+
+	var height = this.$viewport.innerHeight(),
+		width = this.$viewport.innerWidth(),
+		aspect = width / height;
+
+	return {
+		height: height,
+		width: width,
+		aspect: aspect
 	};
 
 };

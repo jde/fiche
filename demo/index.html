@@ -28,6 +28,11 @@
 			border: 1px solid #ccc;
 		}
 
+		.fiche-scroll-viewable {
+			border: 1px solid #ddd;
+			background-color: #eee;
+		}
+
 	</style>
 
 </head>
@@ -49,6 +54,8 @@
 	<img width="100" src="http://www.inf.aber.ac.uk/advisory/faqs/library/images/microfiche5.jpg" />
 
 	<script>
+
+		var f, fs;
 
 		var drawNav = function (f) {
 			$(".nav").html("Superfiche goto ");
@@ -80,11 +87,7 @@
 		};
 
 		$(function () {
-			f = new fiche('.viewport', {
-				scroll: {
-					e: $('.scroll')
-				}
-			});
+			f = new fiche('.viewport');
 
 			f.add('img', function (e, fiche) {
 					return Math.floor(Math.random() * 400);
@@ -95,6 +98,9 @@
 			);
 
 			drawNav(f);
+
+			fs = new ficheScroll($('.scroll'), f);
+
 
 		});
 
