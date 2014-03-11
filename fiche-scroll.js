@@ -29,7 +29,7 @@ var ficheScroll = function (e, f, args) {
 
 	this.conform();
 
-	$(this.f).on('surface', {'this': this}, this.conform);
+	$(this.f).on('surfaceUpdate', {'this': this}, this.conform);
 
 };
 
@@ -67,11 +67,11 @@ ficheScroll.prototype.drawViewable = function (self) {
 
 	var surfaceSize = this.f.surfaceSize(),
 		viewportSize = this.f.viewportSize(),
-		ratio = viewportSize.height / surfaceSize.height,
+		ratio = this.height / surfaceSize.height,
 		viewableHeight = this.height * ratio,
 		viewableWidth = this.width * ratio,
-		viewableTop,
-		viewableLeft;
+		viewableTop = this.f.surface.top * ratio * -1,
+		viewableLeft = this.f.surface.left * ratio * -1;
 
 	this.$viewable.height = viewableHeight;
 	this.$viewable.width = viewableWidth;

@@ -22,15 +22,22 @@
 			border: 1px solid #ccc;
 		}
 
+		.fiche-surface {
+			background-color: #ddd;
+		}
+
 		.scroll {
 			width: 50%;
 			margin: 12px auto;
 			border: 1px solid #ccc;
+			z-index: 5;
 		}
 
 		.fiche-scroll-viewable {
 			border: 1px solid #ddd;
-			background-color: #eee;
+			background-color: #ee6;
+			z-index: 10;
+			opacity: .3;
 		}
 
 	</style>
@@ -71,7 +78,7 @@
 					return Math.floor(Math.random() * 400);
 				}, 
 				function (e, fiche) {
-					return Math.floor(Math.random() * 800);
+					return Math.floor(Math.random() * 1600);
 				}
 			);
 			drawNav(f);
@@ -93,7 +100,7 @@
 					return Math.floor(Math.random() * 400);
 				}, 
 				function (e, fiche) {
-					return Math.floor(Math.random() * 800);
+					return Math.floor(Math.random() * 1600);
 				}
 			);
 

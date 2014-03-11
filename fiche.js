@@ -25,15 +25,25 @@ var fiche = function (e, args) {
 	});
 
 	// create our surface
+
+	this.surface = {
+		top: 0,
+		left: 0,
+		border: '0px solid #000',
+		padding: 0,
+		margin: 0
+	};
+
 	this.$surface = $('<div></div>');
 	this.$surface.attr('id', 'fiche_surface');
+	this.$surface.addClass('fiche-surface');
 	this.$surface.css({
-		padding: 0,
-		margin: 0,
-		border: '0px solid #000',
+		padding: this.surface.padding,
+		margin: this.surface.margin,
+		border: this.surface.border,
 		position: 'relative',
-		top: 0,
-		left: 0
+		top: this.surface.top,
+		left: this.surface.left
 	});
 
 	// inject it
@@ -44,7 +54,7 @@ var fiche = function (e, args) {
 
 	var that = this;
 	this.triggerSurface = function () {
-		$(that).trigger('surface');
+		$(that).trigger('surfaceUpdate');
 	};
 
 };
@@ -83,21 +93,21 @@ fiche.prototype.goto = function (id) {
 
 	// set new surface top
 	if (typeof this.args.lockTop !== "undefined") {
-		top = this.args.lockTop;
+		this.surface.top = this.args.lockTop;
 	} else {
-		top = ((this.items[id].top * -1) + (vh / 2) - (eh / 2));
+		this.surface.top = ((this.items[id].top * -1) + (vh / 2) - (eh / 2));
 	}
 
 	// set new surface left
 	if (typeof this.args.lockLeft !== "undefined") {
-		left = this.args.lockLeft;
+		this.surface.left = this.args.lockLeft;
 	} else {
-		left = ((this.items[id].left * -1) + (vw / 2) - (ew / 2));
+		this.surface.left = ((this.items[id].left * -1) + (vw / 2) - (ew / 2));
 	}
 
 	this.$surface.animate({
-		top: top + 'px',
-		left: left + 'px'
+		top: this.surface.top,
+		left: this.surface.left
 	}, 200, null, this.triggerSurface);
 
 	return this;
