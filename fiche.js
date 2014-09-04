@@ -85,11 +85,19 @@ fiche.prototype.trigger = function(e, data) {
 
 };
 
+// goto proxies panto with a duration of 0
 fiche.prototype.goto = function (id) {
+
     this.panto(id, 0);
+
 };
 
 fiche.prototype.panto = function(id, duration) {
+
+    // if an id isn't given, default to last item added
+    if (id === null || typeof id === 'undefined') {
+        id = this.items.length - 1;
+    }
 
     var top, left,
         vw = this.$viewport.width(),
@@ -111,7 +119,7 @@ fiche.prototype.panto = function(id, duration) {
         left = ((this.items[id].left * -1) + (vw / 2) - (ew / 2));
     }
 
-    this.$surface.animate({
+    this.$surface.stop().animate({
         top: top + 'px',
         left: left + 'px'
     }, duration);
