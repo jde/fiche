@@ -85,7 +85,11 @@ fiche.prototype.trigger = function(e, data) {
 
 };
 
-fiche.prototype.goto = function(id) {
+fiche.prototype.goto = function (id) {
+    this.panto(id, 0);
+};
+
+fiche.prototype.panto = function(id, duration) {
 
     var top, left,
         vw = this.$viewport.width(),
@@ -110,7 +114,7 @@ fiche.prototype.goto = function(id) {
     this.$surface.animate({
         top: top + 'px',
         left: left + 'px'
-    });
+    }, duration);
 
     this.trigger("fiche:goto", this.items[id].view.model.get('id'));
 
@@ -219,7 +223,7 @@ fiche.prototype.add = function(view, top, left) {
     item.$e.click($.proxy(function(event) {
 
         event.preventDefault();
-        this.goto($(event.currentTarget).attr('data-fiche-id'));
+        this.panto($(event.currentTarget).attr('data-fiche-id'));
 
     }, this));
 
