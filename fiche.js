@@ -92,6 +92,20 @@ fiche.prototype.goto = function (id) {
 
 };
 
+fiche.prototype.bringToFront = function(id) {
+
+    // send all items to back
+    this.$viewport.find('fiche-item').animate({
+        'z-index': 100
+    });
+
+    // bring selected item to front
+    this.items[id].$e.animate({
+        'z-index': 200
+    });
+
+};
+
 fiche.prototype.panto = function(id, duration) {
 
     // if an id isn't given, default to last item added
@@ -124,6 +138,7 @@ fiche.prototype.panto = function(id, duration) {
         left: left + 'px'
     }, duration);
 
+    this.bringToFront(id);
     this.trigger("fiche:goto", this.items[id].view.model.get('id'));
 
     return this;
