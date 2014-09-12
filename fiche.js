@@ -177,25 +177,41 @@ fiche.prototype.layoutElements = function () {
         var horizontalSeparation = 40,
             aspect = 16 / 9,
             viewWidth = this.$viewport.width() - (2 * horizontalSeparation) - 200,
-            viewHeight = viewWidth / aspect,
+            viewHeight = this.$viewport.height() - 80,
             top = 0,
             left = 0;
 
         _.each(this.items, function (item) {
-            
-            item.top = top;
+
+            var eHeight = item.$e.find('img').height(),
+                eWidth = item.$e.find('img').width(),
+                eRatio = eWidth / eHeight,
+                thisTop = top;
+
+            // constrain by height?
+            if (eHeight / viewHeight > eWidth / viewWidth) {
+                eHeight = viewHeight;
+                eWidth = viewHeight * eRatio;
+            } else { // constrain by width?
+                eWidth = viewWidth;
+                eHeight = viewHeight / eRatio;
+            }
+
+//            thisTop += (viewHeight - eHeight) / 4;
+
+            item.top = thisTop;
             item.left = left;
-            item.width = viewWidth;
-            item.height = viewHeight;
+            item.width = eHeight;
+            item.height = eWidth;
 
             item.$e.css({
-                height: viewHeight,
-                width: viewWidth,
-                top: top,
+                height: eHeight,
+                width: eWidth,
+                top: thisTop,
                 left: left
             });
 
-            left += viewWidth + (horizontalSeparation * 2);
+            left += eWidth + (horizontalSeparation * 2);
 
         });
 
