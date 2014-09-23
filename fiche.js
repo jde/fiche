@@ -50,6 +50,22 @@ var fiche = function(e, args) {
     // item focued on
     this.focus = null;
 
+};
+
+fiche.prototype.getId = function (item) {
+
+    if (typeof item === "number" || typeof item === "string") {
+        return item;
+    }
+
+    for (var i = 0; i < this.items.length; i++) {
+        var thisItem = this.items[i];
+        if (thisItem.$e === item || thisItem.view === item || thisItem.view.model === item) {
+            return i;
+        }
+    }
+
+    return null;
 
 };
 
@@ -86,9 +102,9 @@ fiche.prototype.trigger = function(e, data) {
 };
 
 // goto proxies panto with a duration of 0
-fiche.prototype.goto = function (id) {
+fiche.prototype.goto = function (item) {
 
-    this.panto(id, 0);
+    this.panto(item, 0);
 
 };
 
@@ -106,12 +122,10 @@ fiche.prototype.bringToFront = function(id) {
 
 };
 
-fiche.prototype.panto = function(id, duration) {
+fiche.prototype.panto = function(item, duration) {
 
-    // if an id isn't given, default to last item added
-    if (id === null || typeof id === 'undefined') {
-        id = this.items.length - 1;
-    }
+    var id = this.getId(item),
+        view = this.items[id].view;
 
     var top, left,
         vw = this.$viewport.width(),
@@ -119,7 +133,7 @@ fiche.prototype.panto = function(id, duration) {
         ew = this.items[id].$e.width(),
         eh = this.items[id].$e.height();
 
-    this.focus = id;
+    this.focus = view;
 
     if (typeof this.args.lockTop !== "undefined") {
         top = this.args.lockTop;
@@ -139,13 +153,13 @@ fiche.prototype.panto = function(id, duration) {
     }, duration);
 
     this.bringToFront(id);
-    this.trigger("fiche:goto", this.items[id].view.model.get('id'));
+    this.trigger("fiche:setfocus", this.items[id].view.model.get('id'));
 
     return this;
 
 };
 
-fiche.prototype.update = function(id, top, left) {
+fiche.prototype.update = function(view, top, left) {
 
     if (typeof top === "undefined" && typeof left === "undefined") {
         top = this.items[id].o.top;
@@ -219,7 +233,7 @@ fiche.prototype.layoutElements = function () {
 
     // move the viewport to maintain focus
     if (this.focus !== null) {
-        this.goto(this.focus);
+        //this.goto(this.focus);
     }
 
 };
@@ -330,3 +344,4 @@ fiche.prototype.gotoBy = function(attr, value) {
     return this.goto(item.id);
 
 };
+
