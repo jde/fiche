@@ -124,8 +124,13 @@ fiche.prototype.bringToFront = function(id) {
 
 fiche.prototype.panto = function(item, duration) {
 
-    var id = this.getId(item),
-        view = this.items[id].view;
+    var id = this.getId(item);
+
+    if (typeof id === "undefined" || id === null) {
+        return null;
+    }
+
+    var view = this.items[id].view;
 
     var top, left,
         vw = this.$viewport.width(),
@@ -153,32 +158,35 @@ fiche.prototype.panto = function(item, duration) {
     }, duration);
 
     this.bringToFront(id);
-    this.trigger("fiche:setfocus", this.items[id].view.model.get('id'));
 
     return this;
 
 };
 
-fiche.prototype.update = function(view, top, left) {
+// take any recognizable item and update it
+fiche.prototype.update = function(it, top, left) {
+
+    // 
+    var item = this.get(it);
 
     if (typeof top === "undefined" && typeof left === "undefined") {
-        top = this.items[id].o.top;
-        left = this.items[id].o.left;
+        top = item.o.top;
+        left = item.o.left;
     }
 
-    this.items[id].top = this.set(this.items[id].$e, top);
-    this.items[id].left = this.set(this.items[id].$e, left);
+    item.top = this.set(item.$e, top);
+    item.left = this.set(item.$e, left);
 
-    this.move(id);
+    this.move(item);
 
     return this;
 
 };
 
-fiche.prototype.move = function(id) {
-    this.items[id].$e.animate({
-        top: this.items[id].top,
-        left: this.items[id].left
+fiche.prototype.move = function(item) {
+    item.$e.animate({
+        top: item.top,
+        left: item.left
     });
 };
 
@@ -276,7 +284,11 @@ fiche.prototype.add = function(view, top, left) {
     item.$e.click($.proxy(function(event) {
 
         event.preventDefault();
-        this.panto($(event.currentTarget).attr('data-fiche-id'));
+
+//        this.panto($(event.currentTarget).attr('data-fiche-id'));
+
+        var id = $(event.currentTarget).attr('data-fiche-id');
+        this.trigger("fiche:setfocus", this.items[id].view.model);
 
     }, this));
 
@@ -302,10 +314,45 @@ fiche.prototype.addMany = function(es, top, left) {
 
 };
 
-fiche.prototype.get = function() {
-    return this.items;
+// get by any recognizable aspect of the item
+fiche.prototype.get = function(item) {
+
+    if (typeof item === "undefined") {
+        return this.items;
+    }
+
+    for (var i = 0, l = this.items.length; i < l; i++) {
+
+        // is it the view itself?
+        if (this.items[i] && item === this.items[i].view) {
+            return this.items[i];
+        }
+
+        // is it the element?
+        if (this.items[i] && item === this.items[i].$e) {
+            return this.items[i];
+        }
+
+        // is it the id of the model?  (todo, type check model?)
+        if (this.items[i]  && this.items[i].view && this.items[i].view.model && item === this.items[i].view.model.get('id')) {
+            return this.items[i];
+        }
+        if (this.items[i] && this.items[i].view && item === this.items[i].view.model) {
+            return this.items[i];
+        }
+
+        // is it an idex in the array?  (this comes last as it is the most janky)
+        if (this.items[i] && item === i) {
+            return this.items[i];
+        }
+
+    }
+
+    return null;
+
 };
 
+// deprecated
 fiche.prototype.getBy = function(attr, value) {
 
     for (var i = 0, l = this.items.length; i < l; i++) {
@@ -321,6 +368,7 @@ fiche.prototype.getBy = function(attr, value) {
 
 };
 
+// deprecated
 fiche.prototype.updateBy = function(attr, value, top, left) {
 
     var item = this.getBy(attr, value);
