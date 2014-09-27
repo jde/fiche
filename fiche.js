@@ -250,7 +250,11 @@ fiche.prototype.add = function(view, top, left) {
 
     var element, item;
 
-    if (view.$el) {
+    // is this a selected array of el's? use the first
+    if (view.$el && view.$el.length) {
+        element = $(view.$el[0]);
+        view.$el = element;
+    } else if (view.$el) {
         element = view.$el;
     } else {
         element = $(view);
@@ -274,7 +278,6 @@ fiche.prototype.add = function(view, top, left) {
             left: left
         }
     };
-
 
     this.items.push(item);
     item.id = this.items.length - 1;
